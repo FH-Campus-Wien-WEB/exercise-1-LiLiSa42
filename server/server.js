@@ -72,26 +72,22 @@ app.get('/movies', function (req, res) {
         }
 
 
-      
         const filtered = {
           Title: movie.Title,
-          Genres: movie.Genre,
-          Directors: movie.Director || "N/A",
-          Writers: movie.Writer || "N/A",
-          Actors: movie.Actors || "N/A",
+          Genres: genresArray,
+          Directors: directorsArray,
+          Writers: writersArray,
+          Actors: actorsArray,
           Released: releasedISO,
           Runtime: runtimeNum,
           Metascore: metascoreNum,
           imdbRating: imdbRating  
         };
           
-        fields.forEach(f => {
-          filtered[f] = movie[f] || "N/A";
-        })
         return filtered;
       });
   });
-  Promise. all(promises)
+  Promise.all(promises)
   .then(function(moviedata) {
     res.json(moviedata); // für html
   });
@@ -100,5 +96,4 @@ app.get('/movies', function (req, res) {
 app.listen(3000)
 
 console.log("Server now listening on http://localhost:3000/")
-
 });
