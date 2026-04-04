@@ -9,6 +9,17 @@
         /* Part 3: Your styling goes here */
     </style>
     <script>
+        fetch("{movies}")
+            .then(response => response.json())
+            .then(data => {
+                const ul = document.querySelector("body")
+                data.forEach(movie => {
+                    const movieElement = document.createElement("li")
+                    movieElement.textContent = `${movie.title} (${movie.year})`
+                    ul.append(movieElement)
+                })
+            })
+
         function reverseString(s) {
             return s.split("").reverse().join("");
         }
