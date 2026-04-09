@@ -5,38 +5,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies!</title>
+    <h1>LiLi's Favourite Studio Ghibli Movies</h1>
     <style>
-        /* Part 3: Your styling goes here */
-    </style>
-    <script>
-        fetch("{movies}")
-            .then(response => response.json())
-            .then(data => {
-                const ul = document.querySelector("body")
-                data.forEach(movie => {
-                    const movieElement = document.createElement("li")
-                    movieElement.textContent = `${movie.title} (${movie.year})`
-                    ul.append(movieElement)
-                })
-            })
-
-        function reverseString(s) {
-            return s.split("").reverse().join("");
+        h1 {
+        font-family: Arial, sans-serif;
+        font-size: 2.5rem;
+        font-weight: bold;
+         color: black;
+        text-align: left top;
+        margin: 20px 20px 80px 0px; /*oben - rechts - unten - links*/
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: lightblue;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+                url('Studio_Ghibli_logo.png');
+            background-repeat: repeat-y;
+            background-position: right top;
+            background-size: 500px auto;
         }
 
+        ol {
+            padding-left: 0;
+            list-style-type: none; /* sonst Zahlen dabei */
+        }
+
+        li {
+            margin-bottom: 4.5rem;
+        }
+
+        .movie-poster {
+            width: 220px;
+            height: 330px;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 3.00rem;
+        }
+    </style>
+    <script>
         window.onload = function () {
-            const xhr = new XMLHttpRequest()
-            xhr.onload = function () {
-                const bodyElement = document.querySelector("body")
-                if (xhr.status == 200) {
-		            /* Part 2: Build the HTML elements here and append them to the body */ 
-                    bodyElement.append(reverseString(xhr.responseText))
-                } else {
-                    bodyElement.append("Daten konnten nicht geladen werden, Status " + xhr.status + " - " + xhr.statusText)
-                }
-            }
-            xhr.open("GET", "/movies")
-            xhr.send()
+            const bodyElement = document.querySelector("body")
+            const list = document.createElement("ol")
+            bodyElement.append(list)
+
+            fetch("/movies")
+                .then(response => {
+                    if (!response.ok) throw new Error(response.status + " " + response.statusText)
+                    return response.json()
+                })
+                .then(data => {
+                    data.forEach(movie => {
+                        const movieElement = document.createElement("li")
+                        const posterHtml = movie.Poster && movie.Poster !== "N/A"
+                            ? `<img src="${movie.Poster}" alt="Poster von ${movie.Title}" class="movie-poster">`
+                            : ""
+
+                        movieElement.innerHTML = `
+                            ${posterHtml}
+                            <strong>${movie.Title}</strong><br>
+                            Genres: ${movie.Genres.join(", ")}<br>
+                            Directors: ${movie.Directors.join(", ")}<br>
+                            Writers: ${movie.Writers.join(", ")}<br>
+                            Actors: ${movie.Actors.join(", ")}<br>
+                            Released: ${movie.Released}<br>
+                            Runtime: ${movie.Runtime}${typeof movie.Runtime === "number" ? " min" : ""}<br>
+                            Metascore: ${movie.Metascore}<br>
+                            IMDB Rating: ${movie.imdbRating}
+                        `
+                        list.append(movieElement)
+                    })
+                })
+                .catch(error => {
+                    bodyElement.append("Daten konnten nicht geladen werden: " + error.message)
+                })
         }
     </script>
 

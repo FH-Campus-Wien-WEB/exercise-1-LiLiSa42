@@ -74,6 +74,7 @@ app.get('/movies', function (req, res) {
 
         const filtered = {
           Title: movie.Title,
+          Poster: movie.Poster || "N/A",
           Genres: genresArray,
           Directors: directorsArray,
           Writers: writersArray,
@@ -92,8 +93,8 @@ app.get('/movies', function (req, res) {
     res.json(moviedata); // für html
   });
 
-
-app.listen(3000)
+});
+app.listen(3000, () => {
 
 console.log("Server now listening on http://localhost:3000/")
 });
